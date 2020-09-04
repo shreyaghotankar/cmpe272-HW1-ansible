@@ -1,0 +1,3 @@
+[Servers]
+198.18.134.49 ansible_user=demouser
+198.18.134.50 ansible_user=demouser

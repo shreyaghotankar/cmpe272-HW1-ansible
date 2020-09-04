@@ -1,0 +1,40 @@
+---
+- hosts: Servers
+  sudo: yes
+  tasks:
+   - name: Add epel-repo
+     yum:
+      name: epel-release
+      state: present
+
+   - name: Install Nginx
+     yum:
+      name: nginx
+      state: present
+
+   - name: copy conf to /etc/nginx/conf.d
+     template:
+      src: /home/cisco/ansible_work/portset.conf
+      dest: /etc/nginx/conf.d/portset.conf
+
+   - name: add index.html file
+     template:
+      src: /home/cisco/ansible_work/index.html
+      dest: /usr/share/nginx/html/index.html
+
+   - name: allow all access to tcp port
+     firewalld:
+      port: 8080/tcp
+      zone: public
+      permanent: yes
+      state: enabled
+    
+   - name: reload firewalld
+     systemd:
+      name: firewalld
+      state: reloaded
+
+   - name: Start Nginx
+     service:
+      name: nginx
+      state: started
